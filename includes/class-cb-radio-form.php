@@ -24,6 +24,7 @@ class CB_Radio_Form {
 		// nothing for this.
 		wp_register_style( 'cb-radio-google-fonts', CB_Radio_Themes::google_fonts_url(), [], null );
 		wp_register_style( 'cb-radio-tuner', CB_RADIO_URL . 'assets/tuner.css', [ 'cb-radio-google-fonts' ], CB_RADIO_VERSION );
+		wp_register_style( 'cb-radio-form', CB_RADIO_URL . 'assets/form.css', [], CB_RADIO_VERSION );
 		// hls.js: decodes HLS (.m3u8) streams for browsers that don't support it natively
 		// (everything except Safari). Loaded from cdnjs; only actually fetched by the
 		// browser when a channel's stream turns out to need it — see tuner.js.
@@ -32,6 +33,7 @@ class CB_Radio_Form {
 	}
 
 	public static function shortcode() {
+		wp_enqueue_style( 'cb-radio-form' );
 		// Guest submissions allowed since 0.11.0 (Jacob's call): artists can
 		// submit without an account. Submissions land in the pending review
 		// queue either way; a honeypot field filters the dumb bots.

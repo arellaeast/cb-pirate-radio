@@ -1,0 +1,169 @@
+/* CB Radio — submission form skin.
+   Matches the Radio Deck: paper card, ink borders, hard shadows, square
+   corners, Poppins, neon accents. Scoped to .cb-radio-submit. */
+
+.cb-radio-submit {
+    --ink: #111111;
+    --paper: #FFFDF4;
+    --yellow: #FFD500;
+    --pink: #FF2E88;
+    --purple: #7B2FFF;
+    --cyan: #00C2E8;
+    --lime: #7ED321;
+    font-family: 'Poppins', sans-serif;
+    color: var(--ink);
+    background: var(--paper);
+    border: 3px solid var(--ink);
+    box-shadow: 8px 8px 0 var(--ink);
+    padding: 24px 26px 26px;
+    max-width: 860px;
+    margin: 34px auto 44px;
+}
+.cb-radio-submit * { box-sizing: border-box; border-radius: 0 !important; }
+
+.cb-radio-submit::before {
+    content: 'CAPT\00B7BLTMR \2014 SUBMIT YOUR MUSIC';
+    display: block;
+    font-weight: 800;
+    letter-spacing: .14em;
+    font-size: 14px;
+    border-bottom: 3px solid var(--ink);
+    padding-bottom: 12px;
+    margin-bottom: 22px;
+}
+
+/* notices */
+.cb-radio-submit .cb-radio-notice {
+    border: 3px solid var(--ink);
+    box-shadow: 4px 4px 0 var(--ink);
+    background: #fff;
+    padding: 12px 16px;
+    font-weight: 600;
+    margin: 0 0 22px;
+}
+.cb-radio-submit .cb-radio-notice--ok { background: var(--lime); }
+.cb-radio-submit .cb-radio-notice--err { background: var(--pink); color: #fff; }
+
+/* field groups = deck cards, legends = chips */
+.cb-radio-submit fieldset {
+    background: #fff;
+    border: 3px solid var(--ink);
+    box-shadow: 4px 4px 0 var(--ink);
+    padding: 20px 18px 6px;
+    margin: 0 0 22px;
+    min-width: 0;
+}
+.cb-radio-submit legend {
+    background: var(--pink);
+    color: #fff;
+    border: 2px solid var(--ink);
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+}
+.cb-radio-submit form p { margin: 0 0 16px; }
+
+/* labels + fields */
+.cb-radio-submit label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    line-height: 1.45;
+}
+.cb-radio-submit input[type='text'],
+.cb-radio-submit textarea,
+.cb-radio-submit select {
+    width: 100%;
+    margin-top: 7px;
+    padding: 11px 12px;
+    border: 3px solid var(--ink);
+    background: #fff;
+    color: var(--ink);
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    letter-spacing: 0;
+    text-transform: none;
+    line-height: 1.4;
+}
+.cb-radio-submit textarea { resize: vertical; }
+.cb-radio-submit input[type='text']:focus,
+.cb-radio-submit textarea:focus,
+.cb-radio-submit select:focus {
+    outline: none;
+    box-shadow: 4px 4px 0 var(--cyan);
+}
+.cb-radio-submit ::placeholder { color: var(--ink); opacity: .45; }
+
+/* file pickers */
+.cb-radio-submit input[type='file'] {
+    width: 100%;
+    margin-top: 7px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    text-transform: none;
+    letter-spacing: 0;
+}
+.cb-radio-submit input[type='file']::file-selector-button {
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    background: var(--yellow);
+    color: var(--ink);
+    border: 3px solid var(--ink);
+    box-shadow: 3px 3px 0 var(--ink);
+    padding: 8px 14px;
+    margin-right: 12px;
+    cursor: pointer;
+}
+.cb-radio-submit input[type='file']::file-selector-button:hover { background: var(--pink); color: #fff; }
+
+/* license checkbox row reads as a sentence, not a shouted label */
+.cb-radio-submit label:has(> input[type='checkbox']) {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0;
+    text-transform: none;
+    line-height: 1.55;
+}
+.cb-radio-submit input[type='checkbox'] {
+    flex: none;
+    width: 20px;
+    height: 20px;
+    margin-top: 2px;
+    accent-color: var(--pink);
+    cursor: pointer;
+}
+
+/* submit */
+.cb-radio-submit .cb-radio-btn {
+    display: inline-block;
+    background: var(--yellow);
+    color: var(--ink);
+    border: 3px solid var(--ink);
+    box-shadow: 4px 4px 0 var(--ink);
+    padding: 12px 28px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+.cb-radio-submit .cb-radio-btn:hover { background: var(--pink); color: #fff; }
+.cb-radio-submit .cb-radio-btn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--ink); }
+
+@media (max-width: 640px) {
+    .cb-radio-submit { padding: 18px 16px 20px; margin: 20px 10px 30px; }
+    .cb-radio-submit fieldset { padding: 16px 14px 2px; }
+    .cb-radio-submit .cb-radio-btn { width: 100%; }
+}
