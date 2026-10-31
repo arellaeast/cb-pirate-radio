@@ -3,7 +3,7 @@ defined( 'ABSPATH' ) || exit;
 
 $settings   = CB_Radio_Helpers::settings();
 $channels   = CB_Radio_Helpers::channels();
-$has_artist = (bool) CB_Radio_Artists::for_user( get_current_user_id() );
+$has_artist = is_user_logged_in() && (bool) CB_Radio_Artists::for_user( get_current_user_id() );
 ?>
 <div class="cb-radio-submit">
 
@@ -16,6 +16,8 @@ $has_artist = (bool) CB_Radio_Artists::for_user( get_current_user_id() );
 	<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" enctype="multipart/form-data">
 		<input type="hidden" name="action" value="cb_radio_submit">
 		<?php wp_nonce_field( 'cb_radio_submit' ); ?>
+		<p style="display:none" aria-hidden="true"><label>Leave this field empty
+			<input type="text" name="cb_radio_website" tabindex="-1" autocomplete="off"></label></p>
 
 		<?php if ( ! $has_artist ) : ?>
 			<fieldset>

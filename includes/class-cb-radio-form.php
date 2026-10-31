@@ -11,6 +11,7 @@ class CB_Radio_Form {
 		add_shortcode( 'cb_radio_submit', [ __CLASS__, 'shortcode' ] );
 		add_shortcode( 'cb_radio_tuner', [ __CLASS__, 'tuner_shortcode' ] );
 		add_action( 'admin_post_cb_radio_submit', [ __CLASS__, 'handle' ] );
+		add_action( 'admin_post_nopriv_cb_radio_submit', [ __CLASS__, 'handle' ] );
 		add_action( 'init', [ __CLASS__, 'maybe_serve_preview_download' ] );
 		add_action( 'wp_enqueue_scripts', [ __CLASS__, 'assets' ] );
 	}
@@ -31,13 +32,9 @@ class CB_Radio_Form {
 	}
 
 	public static function shortcode() {
-		if ( ! is_user_logged_in() ) {
-			return '<p>' . sprintf(
-				/* translators: %s: login url */
-				esc_html__( 'You need an account to submit music. %s', 'cb-radio' ),
-				'<a href="' . esc_url( wp_login_url( get_permalink() ) ) . '">' . esc_html__( 'Log in or register', 'cb-radio' ) . '</a>'
-			) . '</p>';
-		}
+		// Guest submissions allowed since 0.11.0 (Jacob's call): artists can
+		// submit without an account. Submissions land in the pending review
+		// queue either way; a honeypot field filters the dumb bots.
 		ob_start();
 		include CB_RADIO_DIR . 'templates/submit-form.php';
 		return ob_get_clean();
@@ -71,7 +68,7 @@ class CB_Radio_Form {
 	}
 
 	public static function handle() {
-		if ( ! is_user_logged_in() || ! current_user_can( 'read' ) ) {
+		if ( is_user_logged_in() && ! current_user_can( 'read' ) ) {
 			wp_die( 'Log in first.' );
 		}
 		check_admin_referer( 'cb_radio_submit' );
@@ -85,8 +82,17 @@ class CB_Radio_Form {
 			exit;
 		};
 
-		// --- Artist profile: reuse or create ---
-		$artist = CB_Radio_Artists::for_user( $user_id );
+		// Honeypot: real visitors never see or fill this field. Pretend
+		// success so bots don't learn, but store nothing.
+		if ( ! empty( $_POST['cb_radio_website'] ) ) {
+			wp_safe_redirect( add_query_arg( 'cb_radio_success', 1, $redirect ) );
+			exit;
+		}
+
+		// --- Artist profile: reuse (signed-in artists) or create ---
+		// Guests always create a fresh profile keyed to user 0; for_user()
+		// must never match them to somebody else's guest profile.
+		$artist = $user_id ? CB_Radio_Artists::for_user( $user_id ) : null;
 		if ( ! $artist ) {
 			$name = sanitize_text_field( wp_unslash( $_POST['artist_name'] ?? '' ) );
 			if ( '' === $name ) {
@@ -170,8 +176,10 @@ class CB_Radio_Form {
 		}
 
 		// --- Album art via media library (public is fine/desired) ---
+		// Signed-in artists only: the media library needs an uploading user.
+		// Guest art is skipped silently; moderators can add it at review.
 		$art_id = null;
-		if ( ! empty( $_FILES['album_art']['tmp_name'] ) ) {
+		if ( $user_id && ! empty( $_FILES['album_art']['tmp_name'] ) ) {
 			require_once ABSPATH . 'wp-admin/includes/image.php';
 			require_once ABSPATH . 'wp-admin/includes/file.php';
 			require_once ABSPATH . 'wp-admin/includes/media.php';

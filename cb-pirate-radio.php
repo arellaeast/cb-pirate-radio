@@ -2,14 +2,14 @@
 /**
  * Plugin Name: CB Pirate Radio
  * Description: Captain Baltimore pirate radio — artist submissions, genre channels, direct AzuraCast integration, and the tune-in dial. Requires only WordPress + AzuraCast; no other tools needed.
- * Version: 0.10.0
+ * Version: 0.11.0
  * Author: Captain Baltimore
  * Text Domain: cb-radio
  */
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'CB_RADIO_VERSION', '0.10.0' );
+define( 'CB_RADIO_VERSION', '0.11.0' );
 define( 'CB_RADIO_FILE', __FILE__ );
 define( 'CB_RADIO_DIR', plugin_dir_path( __FILE__ ) );
 define( 'CB_RADIO_URL', plugin_dir_url( __FILE__ ) );
