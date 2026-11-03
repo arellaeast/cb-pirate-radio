@@ -13,6 +13,7 @@ class CB_Radio_Install {
 		if ( ! wp_next_scheduled( 'cb_radio_process_queue' ) ) {
 			wp_schedule_event( time() + 60, 'cb_radio_minutely', 'cb_radio_process_queue' );
 		}
+		CB_Radio_Reconciler::ensure_scheduled();
 		flush_rewrite_rules();
 	}
 
@@ -21,10 +22,14 @@ class CB_Radio_Install {
 		self::create_table();
 		CB_Radio_Charts::create_table();
 		update_option( 'cb_radio_db_version', CB_RADIO_VERSION );
+		// Newer versions can bring new recurring work; make sure it is on
+		// the calendar without waiting for a re-activation.
+		CB_Radio_Reconciler::ensure_scheduled();
 	}
 
 	public static function deactivate() {
 		wp_clear_scheduled_hook( 'cb_radio_process_queue' );
+		wp_clear_scheduled_hook( CB_Radio_Reconciler::HOOK );
 		flush_rewrite_rules();
 	}
 
@@ -95,6 +100,10 @@ add_filter( 'cron_schedules', function ( $schedules ) {
 	$schedules['cb_radio_minutely'] = [
 		'interval' => 60,
 		'display'  => __( 'Every Minute (CB Radio)', 'cb-radio' ),
+	];
+	$schedules['cb_radio_quarter_hourly'] = [
+		'interval' => 900,
+		'display'  => __( 'Every 15 Minutes (CB Radio)', 'cb-radio' ),
 	];
 	return $schedules;
 } );

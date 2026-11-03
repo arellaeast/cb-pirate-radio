@@ -124,6 +124,38 @@ class CB_Radio_AzuraCast {
 	}
 
 	/**
+	 * List every media file in a station's library, playlists included.
+	 * Used by the voting reconciler to see what is actually on the station.
+	 *
+	 * @return array|WP_Error List of file records (each has id, title,
+	 *                        artist, path, playlists).
+	 */
+	public static function files( $station_id ) {
+		return self::request( 'GET', "station/{$station_id}/files", null, 60 );
+	}
+
+	/** List a station's playlists (id, name, type, is_enabled, ...). */
+	public static function playlists( $station_id ) {
+		return self::request( 'GET', "station/{$station_id}/playlists", null, 30 );
+	}
+
+	/**
+	 * Set ONLY the artist field on an existing file, leaving its title,
+	 * album and playlist assignments exactly as they are.
+	 *
+	 * Note the singular route: on current AzuraCast builds the media-edit
+	 * endpoint is /station/{id}/file/{file_id}; the plural form used by
+	 * update_metadata() above answers 405 on those builds. The reconciler
+	 * uses this method to align an artist string with the artist's page
+	 * name so the now-playing vote gate can resolve the track.
+	 */
+	public static function update_file_artist( $station_id, $file_id, $artist ) {
+		return self::request( 'PUT', "station/{$station_id}/file/{$file_id}", [
+			'artist' => $artist,
+		] );
+	}
+
+	/**
 	 * Lightweight connectivity + auth check for the Settings screen's "Test
 	 * Connection" button — lists stations visible to the key without touching
 	 * any specific station or file.
