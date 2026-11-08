@@ -155,12 +155,12 @@ class CB_Radio_Charts {
 
 		// Optional genre view: ?channel=<slug> narrows the same chart to one
 		// station. Unknown slugs fall back to the overall chart.
-		$channel = sanitize_key( (string) $req->get_param( 'channel' ) );
-		if ( '' !== $channel && null === CB_Radio_Helpers::channel( $channel ) ) {
-			$channel = '';
+		$channel_filter = sanitize_key( (string) $req->get_param( 'channel' ) );
+		if ( '' !== $channel_filter && null === CB_Radio_Helpers::channel( $channel_filter ) ) {
+			$channel_filter = '';
 		}
 
-		$cache_key = 'cb_radio_chart_' . $period . ( '' !== $channel ? '_' . $channel : '' );
+		$cache_key = 'cb_radio_chart_' . $period . ( '' !== $channel_filter ? '_' . $channel_filter : '' );
 		$cached    = get_transient( $cache_key );
 		if ( false !== $cached ) {
 			return $cached;
@@ -174,8 +174,8 @@ class CB_Radio_Charts {
 		$subs  = CB_Radio_Helpers::table();
 
 		$channel_sql = '';
-		if ( '' !== $channel ) {
-			$channel_sql = $wpdb->prepare( ' AND s.channel_slug = %s', $channel );
+		if ( '' !== $channel_filter ) {
+			$channel_sql = $wpdb->prepare( ' AND s.channel_slug = %s', $channel_filter );
 		}
 
 		$rows = $wpdb->get_results( $wpdb->prepare(
@@ -216,7 +216,7 @@ class CB_Radio_Charts {
 		// Overall chart only — a genre view with no votes stays empty rather
 		// than dressing demo rows up as that genre's chart.
 		$demo = false;
-		if ( empty( $entries ) && '' === $channel ) {
+		if ( empty( $entries ) && '' === $channel_filter ) {
 			$entries = self::demo_chart();
 			$demo    = true;
 		}
@@ -225,7 +225,7 @@ class CB_Radio_Charts {
 			'period'  => $period,
 			'days'    => $days,
 			'demo'    => $demo,
-			'channel' => $channel,
+			'channel' => $channel_filter,
 			'entries' => $entries,
 		];
 
