@@ -125,6 +125,10 @@ class CB_Radio_Charts {
 		// Charts change, so drop chart caches.
 		delete_transient( 'cb_radio_chart_week' );
 		delete_transient( 'cb_radio_chart_month' );
+		if ( ! empty( $row->channel_slug ) ) {
+			delete_transient( 'cb_radio_chart_week_' . $row->channel_slug );
+			delete_transient( 'cb_radio_chart_month_' . $row->channel_slug );
+		}
 
 		// Deliberately NOT returning aggregate up/down totals here. The
 		// whole point of hiding vote counts is that nobody — including the
@@ -149,7 +153,14 @@ class CB_Radio_Charts {
 	public static function chart( WP_REST_Request $req ) {
 		$period = $req->get_param( 'period' );
 
-		$cache_key = 'cb_radio_chart_' . $period;
+		// Optional genre view: ?channel=<slug> narrows the same chart to one
+		// station. Unknown slugs fall back to the overall chart.
+		$channel = sanitize_key( (string) $req->get_param( 'channel' ) );
+		if ( '' !== $channel && null === CB_Radio_Helpers::channel( $channel ) ) {
+			$channel = '';
+		}
+
+		$cache_key = 'cb_radio_chart_' . $period . ( '' !== $channel ? '_' . $channel : '' );
 		$cached    = get_transient( $cache_key );
 		if ( false !== $cached ) {
 			return $cached;
@@ -162,6 +173,11 @@ class CB_Radio_Charts {
 		$votes = self::table();
 		$subs  = CB_Radio_Helpers::table();
 
+		$channel_sql = '';
+		if ( '' !== $channel ) {
+			$channel_sql = $wpdb->prepare( ' AND s.channel_slug = %s', $channel );
+		}
+
 		$rows = $wpdb->get_results( $wpdb->prepare(
 			"SELECT s.id, s.track_title, s.channel_slug, s.artist_post_id, s.art_attachment_id,
 				SUM(v.vote = 1)  AS up,
@@ -172,7 +188,7 @@ class CB_Radio_Charts {
 			 INNER JOIN {$subs} s ON s.id = v.submission_id
 			 WHERE v.voted_at >= %s
 			   AND s.status = 'live'
-			   AND s.submission_type = 'track'
+			   AND s.submission_type = 'track'{$channel_sql}
 			 GROUP BY v.submission_id
 			 ORDER BY score DESC, up DESC, last_vote DESC
 			 LIMIT 10",
@@ -197,8 +213,10 @@ class CB_Radio_Charts {
 
 		// ---- PLACEHOLDER MODE ----
 		// No real votes yet: demo chart so the page is viewable end-to-end.
+		// Overall chart only — a genre view with no votes stays empty rather
+		// than dressing demo rows up as that genre's chart.
 		$demo = false;
-		if ( empty( $entries ) ) {
+		if ( empty( $entries ) && '' === $channel ) {
 			$entries = self::demo_chart();
 			$demo    = true;
 		}
@@ -207,6 +225,7 @@ class CB_Radio_Charts {
 			'period'  => $period,
 			'days'    => $days,
 			'demo'    => $demo,
+			'channel' => $channel,
 			'entries' => $entries,
 		];
 
