@@ -8,7 +8,7 @@ $has_artist = is_user_logged_in() && (bool) CB_Radio_Artists::for_user( get_curr
 <div class="cb-radio-submit">
 
 	<?php if ( isset( $_GET['cb_radio_success'] ) ) : ?>
-		<p class="cb-radio-notice cb-radio-notice--ok">🏴‍☠️ Track received. It'll hit the airwaves once the Captain gives it a listen.</p>
+		<p class="cb-radio-notice cb-radio-notice--ok">🏴‍☠️ Track received. It'll hit the airwaves once the Captain gives it a listen.<?php if ( isset( $_GET['cb_radio_art'] ) ) : ?> Cover art pulled from your link, too. 🎨<?php endif; ?></p>
 	<?php elseif ( isset( $_GET['cb_radio_error'] ) ) : ?>
 		<p class="cb-radio-notice cb-radio-notice--err"><?php echo esc_html( rawurldecode( wp_unslash( $_GET['cb_radio_error'] ) ) ); ?></p>
 	<?php endif; ?>
@@ -49,6 +49,9 @@ $has_artist = is_user_logged_in() && (bool) CB_Radio_Artists::for_user( get_curr
 				<input type="file" name="audio_file" accept="audio/mpeg,.mp3" required></label></p>
 			<p><label><?php esc_html_e( 'Album art (square JPG/PNG, optional)', 'cb-radio' ); ?><br>
 				<input type="file" name="album_art" accept="image/jpeg,image/png"></label></p>
+			<p><label><?php esc_html_e( 'Spotify or Apple Music link (optional)', 'cb-radio' ); ?><br>
+				<input type="url" name="streaming_link" maxlength="500" placeholder="https://open.spotify.com/track/…"></label><br>
+				<small><?php esc_html_e( 'No cover art handy? Paste the track link and we will pull the artwork from it for you.', 'cb-radio' ); ?></small></p>
 		</fieldset>
 
 		<fieldset>

@@ -87,12 +87,20 @@ class CB_Radio_Queue_Table extends WP_List_Table {
 				esc_html( $row->review_notes )
 			);
 		}
+		$stream = '';
+		if ( ! empty( $row->streaming_link ) ) {
+			$stream = sprintf(
+				'<br><a href="%s" target="_blank" rel="noopener" style="font-size:12px">🔗 Streaming link</a>',
+				esc_url( $row->streaming_link )
+			);
+		}
 		return sprintf(
-			'<strong>%s</strong><br><audio controls preload="none" src="%s" style="height:28px;max-width:220px"></audio>%s%s',
+			'<strong>%s</strong><br><audio controls preload="none" src="%s" style="height:28px;max-width:220px"></audio>%s%s%s',
 			esc_html( $row->track_title ),
 			esc_url( $preview ),
 			$this->row_actions( $actions ),
-			$error
+			$error,
+			$stream
 		);
 	}
 

@@ -48,6 +48,7 @@ class CB_Radio_Install {
 			submission_type VARCHAR(20) NOT NULL DEFAULT 'track',
 			file_path VARCHAR(255) NOT NULL,
 			art_attachment_id BIGINT UNSIGNED NULL,
+			streaming_link VARCHAR(500) NULL,
 			duration_secs SMALLINT UNSIGNED NULL,
 			status VARCHAR(20) NOT NULL DEFAULT 'pending',
 			azuracast_media_id VARCHAR(64) NULL,
