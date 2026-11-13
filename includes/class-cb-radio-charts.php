@@ -284,19 +284,20 @@ class CB_Radio_Charts {
 	}
 
 	/**
-	 * Fair Play panel, appended after the chart on the radio page. Static
+	 * The Heat panel, appended after the chart on the radio page. Static
 	 * house-style block (same cream panel + button as the Fair Play page
-	 * itself) pointing artists at the full fairness write-up. Rendered from
-	 * the plugin, not page content, so it survives page-editor saves.
+	 * itself) branding the twice-daily Spotlight Hours as "The Heat" and
+	 * pointing artists at the full fairness write-up. Rendered from the
+	 * plugin, not page content, so it survives page-editor saves.
 	 */
 	private static function fair_play_block() {
 		$url = esc_url( 'https://captainbaltimore.com/radio/fair-play/' );
 		return <<<HTML
 <div class="cb-fair-play" style="background:#fffdf4;border:3px solid #111111;box-shadow:6px 6px 0 #111111;padding:34px 30px;max-width:860px;margin:26px auto;">
 	<p style="margin:0 0 8px;font-family:'Poppins',sans-serif;font-weight:800;letter-spacing:.18em;text-transform:uppercase;font-size:13px;color:#ff2e88;">For Artists</p>
-	<h2 style="margin:0 0 14px;font-family:'Poppins',sans-serif;font-weight:800;font-size:30px;line-height:1.05;text-transform:uppercase;color:#111111;">Fair Play: How Your Music Gets Played</h2>
-	<p style="margin:0 0 24px;font-size:17px;line-height:1.6;color:#111111;">Pirate Radio plays Baltimore artists, and we publish exactly how the plays get handed out. Every artist in the pool has a floor, a minimum number of plays every week for one featured song. Twice a day, at 9 AM and 9 PM, the Spotlight Hours play each station's hottest songs back to back, and a weekly chart is counted from the plays the stations actually logged. No favorites. No pay to play.</p>
-	<p style="margin:0;"><a href="{$url}" style="display:inline-block;font-family:'Poppins',sans-serif;font-weight:700;color:#ffffff;background:#111111;border:3px solid #111111;padding:13px 26px;box-shadow:4px 4px 0 #ff2e88;text-decoration:none;">See How Fair Play Works</a></p>
+	<h2 style="margin:0 0 14px;font-family:'Poppins',sans-serif;font-weight:800;font-size:30px;line-height:1.05;text-transform:uppercase;color:#111111;">The Heat</h2>
+	<p style="margin:0 0 24px;font-size:17px;line-height:1.6;color:#111111;">Pirate Radio plays Baltimore artists, and twice a day every music station drops the shuffle and plays its hottest songs back to back, about 10 to 20 songs in the hour. That is The Heat. It runs every day, from 9 to 10 in the morning and 9 to 10 at night. The seats are counted, not picked: most of them are earned by songs that hold their listeners, and they are re-earned every week. The rest rotate in daily, longest waiting first, so every artist in the pool gets a turn in the hot hour. Every count comes from the plays the stations actually logged. No favorites. No pay to play.</p>
+	<p style="margin:0;"><a href="{$url}" style="display:inline-block;font-family:'Poppins',sans-serif;font-weight:700;color:#ffffff;background:#111111;border:3px solid #111111;padding:13px 26px;box-shadow:4px 4px 0 #ff2e88;text-decoration:none;">See How The Heat Works</a></p>
 </div>
 HTML;
 	}
